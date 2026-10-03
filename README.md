@@ -148,16 +148,6 @@ Meskipun hasilnya terlihat sempurna (akurasi 100%), ada beberapa hal yang perlu 
 - **Confidence interval lebar** — untuk 10 gambar, akurasi 100% itu rentangnya bisa ±30%. Artinya bisa jadi akurasi sebenarnya antara 70%-100%.
 - **Belum diuji dengan gambar baru** di luar dataset — jadi belum tentu bekerja baik di dunia nyata.
 
-### 6. Masalah dan Solusi
-
-| Masalah | Solusi |
-|---|---|
-| Learning Rate 1e-5 terlalu kecil | Naikkan LR kalau model tidak belajar |
-| Augmentasi penting untuk dataset kecil | Aktifkan saat fine-tuning |
-| Fine-Tuning Partial lebih baik dari Full | Jangan unfreeze semua layer |
-| Akurasi 100% bukan jaminan model bagus | Cek juga nilai Loss |
-| Dataset kecil bikin hasil tidak stabil | Perbesar dataset atau pakai cross-validation |
-
 ---
 
 ## 📦 Dataset & Model
