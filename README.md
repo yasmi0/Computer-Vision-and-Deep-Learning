@@ -130,5 +130,3 @@ Meskipun hasil terlihat sempurna (akurasi 1.0), ada beberapa hal yang perlu dipe
 - **Semua model (3 mode)**: [Google Drive Link](https://drive.google.com/file/d/1d5V2RjagQUioZL0Y6ivFEDBwE_Tjipb8/view?usp=sharing)
 
 > ⚠️ File model (`.keras`) tidak disertakan dalam repositori karena melebihi batas ukuran GitHub (100 MB per file). Model tersedia melalui Google Drive.
-
-## 📂 Struktur Repositori
