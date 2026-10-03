@@ -87,7 +87,7 @@ Dipilih berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**:
 - **Latensi**: **19.58 ms/gambar (± 2.31 ms)**
 
 > 💡 **Kenapa Loss lebih penting dari Akurasi?**
-> Ketiga model semuanya memiliki akurasi 100%, sehingga dibutuhkan cara lain untuk membedakan mana yang terbaik. Loss mengukur seberapa **yakin** model — makin kecil loss, makin yakin model. Fine-Tuning Partial memiliki loss paling rendah, yang berarti model ini paling **yakin** dengan prediksinya.
+> Ketiga model semuanya memiliki akurasi 100%, sehingga dibutuhkan cara lain untuk membedakan mana yang terbaik. Loss mengukur seberapa **yakin** model. Makin kecil loss, makin yakin model. Fine-Tuning Partial memiliki loss paling rendah, yang berarti model ini paling **yakin** dengan prediksinya.
 
 ---
 
@@ -144,13 +144,13 @@ Mode 2 dan 3 mendapatkan akurasi terbaik di **epoch pertama**. Hal ini menunjukk
 
 Meskipun hasilnya terlihat sempurna (akurasi 100%), ada beberapa hal yang perlu diperhatikan:
 
-- **Test set cuma 10 gambar**. Kalau 1 gambar salah saja, akurasi langsung turun ke 90%. Jadi angka 100% ini **belum tentu akurat** untuk data lain.
+- **Test set cuma 10 gambar** — jika 1 gambar salah saja, akurasi langsung turun ke 90%. Jadi angka 100% ini **belum tentu akurat** untuk data lain.
 - **Confidence interval lebar** — untuk 10 gambar, akurasi 100% itu rentangnya bisa ±30%. Artinya bisa jadi akurasi sebenarnya antara 70%-100%.
 - **Belum diuji dengan gambar baru** di luar dataset — jadi belum tentu bekerja baik di dunia nyata.
 
-### 6. Kesimpulan
+### 6. Masalah dan Solusi
 
-| Masalah | Kesimpulan |
+| Masalah | Solusi |
 |---|---|
 | Learning Rate 1e-5 terlalu kecil | Naikkan LR kalau model tidak belajar |
 | Augmentasi penting untuk dataset kecil | Aktifkan saat fine-tuning |
