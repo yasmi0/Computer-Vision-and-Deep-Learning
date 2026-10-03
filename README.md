@@ -68,7 +68,7 @@ Dipilih berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**:
 
 ### 1. Ketiga Mode Berhasil Mencapai Akurasi Sempurna (1.0)
 
-Setelah perbaikan hyperparameter, ketiga mode mencapai **Val Acc = 1.0** dan **Test Acc = 1.0**. Ini menunjukkan bahwa ResNet-50 pre-trained ImageNet mampu mengekstraksi fitur yang relevan untuk membedakan kelas `landing_pad` dan `not_landing_pad`, bahkan pada dataset kecil (100 gambar).
+Setelah perbaikan hyperparameter, ketiga mode mencapai **Val Acc = 1.0** dan **Test Acc = 1.0**. Hal ini menunjukkan bahwa ResNet-50 pre-trained ImageNet mampu mengekstraksi fitur yang relevan untuk membedakan kelas `landing_pad` dan `not_landing_pad`, bahkan pada dataset kecil (100 gambar).
 
 **Perbaikan kunci yang membuat Mode 2 & 3 berhasil:**
 - Learning rate dinaikkan dari `1e-5` → `5e-4` (Mode 2) dan `1e-4` (Mode 3).
