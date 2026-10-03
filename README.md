@@ -115,7 +115,7 @@ Mode 2 dan 3 mencapai akurasi terbaik di **epoch pertama**. Ini menandakan:
 
 ### 5. Keterbatasan Evaluasi pada Dataset Kecil
 
-Meskipun hasil terlihat sempurna (akurasi 1.0), ada beberapa keterbatasan yang perlu diperhatikan:
+Meskipun hasil terlihat sempurna (akurasi 1.0), ada beberapa hal yang perlu diperhatikan:
 
 - **Test set hanya 10 gambar**. Akurasi 1.0 dengan 10 gambar memiliki **confidence interval lebar** (untuk n=10, akurasi 1.0 memiliki 95% CI sekitar ±0.30).
 - **Satu gambar salah** akan menurunkan akurasi menjadi 0.9.
