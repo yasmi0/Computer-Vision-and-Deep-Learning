@@ -118,3 +118,12 @@ Meskipun hasil terlihat sempurna (akurasi 1.0), ada keterbatasan yang perlu disa
 - **Satu gambar salah** akan menurunkan akurasi menjadi 0.9.
 - Hasil **tidak bisa digeneralisasi** ke populasi yang lebih luas tanpa validasi tambahan.
 
+## 📦 Dataset & Model
+
+- **Dataset** (`dataset_raw/`): Tersedia di repositori ini (3 MB)
+- **Model terbaik (Fine-Tuning Partial)**: [Google Drive Link](https://drive.google.com/file/d/1E5Or7mtRVsWhAAyKgsan3hd7znc2ZLDd/view?usp=sharing)
+- **Model Fine-Tuning Full**: [Google Drive Link](https://drive.google.com/file/d/1RN3L705o7q83BY9HUhIkZFIcSy2XBK-3/view?usp=sharing)
+- **Model Feature Extraction**: [Google Drive Link](https://drive.google.com/file/d/1GLaqgHof9kSpgHkNzBnEPgV7YJpQEeD7/view?usp=sharing)
+- **Semua model (3 mode)**: [Google Drive Link](https://drive.google.com/file/d/1d5V2RjagQUioZL0Y6ivFEDBwE_Tjipb8/view?usp=drive_link)
+
+> ⚠️ File model (`.keras`) tidak disertakan dalam repositori karena melebihi batas ukuran GitHub (100 MB per file). Model tersedia melalui Google Drive.
