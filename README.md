@@ -49,7 +49,7 @@ Transfer Learning ResNet-50 dengan 3 mode eksperimen: Feature Extraction, Fine-T
 | Fine-Tuning Full | 1.000000 | 0.560713 | 1.000000 | 0.549323 |
 
 ### Grafik Perbandingan Model
-
+![Grafik Akurasi](https://github.com/yasmi0/Computer-Vision-and-Deep-Learning/blob/main/grafik_akurasi.png)
 
 ### 🏆 Model Terbaik
 
