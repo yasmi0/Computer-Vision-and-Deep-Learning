@@ -1,34 +1,55 @@
 # ResNet-50 Transfer Learning
 
-Transfer Learning ResNet-50 dengan 3 mode eksperimen: Feature Extraction, Fine-Tuning Partial, dan Fine-Tuning Full.
+Proyek ini memakai teknik **transfer learning** dengan model **ResNet-50** untuk mengklasifikasi gambar. Ada 3 cara yang dicoba:
+
+1. **Feature Extraction** — hanya melatih "otak" terakhir model
+2. **Fine-Tuning Partial** — melatih sebagian model
+3. **Fine-Tuning Full** — melatih seluruh model
+
+---
 
 ## 📊 Dataset
 
-- **Total gambar**: 100
-- **Kelas**: 2 (`landing_pad`, `not_landing_pad`)
-- **Split**: Train 70 (70%) | Val 20 (20%) | Test 10 (10%)
-- **Stratified split**: Ya (proporsi kelas seimbang di setiap split)
-- **Random seed**: 42
+- **Jumlah gambar**: 100
+- **Jumlah kelas**: 2 (ada `landing_pad` / tidak ada `landing_pad`)
+- **Pembagian data**: 
+  - 70 gambar untuk **training** (latihan)
+  - 20 gambar untuk **validasi** (uji sementara)
+  - 10 gambar untuk **testing** (uji akhir)
+- **Random seed**: 42 (agar hasilnya dapat diulang)
 
-> ⚠️ **Catatan**: Dataset berukuran kecil (100 gambar). Akurasi 1.0 pada test set (10 gambar) tidak dapat digeneralisasi secara langsung ke populasi yang lebih luas. Hasil validasi harus diverifikasi lebih lanjut pada kumpulan data yang lebih besar.
+> ⚠️ **Penting**: Dataset ini kecil (hanya 100 gambar). Jadi meskipun hasilnya terlihat sempurna (100% benar), ini **belum tentu berlaku** untuk gambar-gambar baru di dunia nyata. Diperlukan dataset yang lebih besar untuk memastikan.
 
-> Dataset tersedia di Google Drive: [Link](https://drive.google.com/drive/folders/1Bz9DVRyVrGYNLZfTsYn2sjf2WTBG2dIZ?usp=sharing)
+> 📁 Dataset lengkap tersedia di [Google Drive](https://drive.google.com/drive/folders/1Bz9DVRyVrGYNLZfTsYn2sjf2WTBG2dIZ?usp=sharing)
 
-## 🧠 Metodologi
+---
 
-- **Model dasar**: ResNet-50 pre-trained ImageNet (23 juta parameter)
-- **Input**: 224×224 piksel, kanal RGB
-- **Preprocessing**: Resize 224×224, normalisasi ImageNet (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-- **Model selection**: Berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**, untuk menghindari kebocoran data test set
-- **Test set**: Hanya digunakan sekali di akhir untuk evaluasi akhir
+## 🧠 Cara Kerja (Metodologi)
+
+Secara sederhana, seperti ini alurnya:
+
+1. **Ambil model ResNet-50 yang sudah pintar** — model ini sebelumnya sudah dilatih dengan 1,2 juta gambar (ImageNet). Jadi dia sudah tahu cara mengenali bentuk, tepi, dan tekstur gambar.
+2. **Sesuaikan dengan tugas kita** — kita hanya perlu "mengajari ulang" bagian akhirnya agar bisa membedakan `landing_pad` vs `not_landing_pad`.
+3. **Latih dengan data kita** — 70 gambar training dipakai untuk belajar.
+
+**Pengaturan teknis:**
+- **Ukuran input**: 224×224 piksel (standar ResNet-50)
+- **Warna**: RGB (bukan BGR, karena pakai TensorFlow bukan OpenCV)
+- **Normalisasi**: Pakai standar ImageNet (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) — agar gambar yang masuk ke model "terasa familiar" seperti gambar training aslinya
+- **Cara pilih model terbaik**: Ambil dari nilai **validasi** (bukan testing!) — agar test set tidak "bocor" ke proses pemilihan model
+- **Data testing**: Hanya dipakai **sekali di akhir** untuk laporan
 
 ### Detail 3 Mode
 
-| Mode | Layer yang Dilatih | LR Awal | Epoch Max | Augmentasi |
+| Mode | Bagian yang Dilatih | Learning Rate | Max Epoch | Augmentasi |
 |---|---|---|---|---|
-| Feature Extraction | Hanya head classifier | 1e-3 | 15 | Tidak |
-| Fine-Tuning Partial | Head + 30 layer terakhir | 5e-4 | 25 | Ya |
-| Fine-Tuning Full | Seluruh layer backbone | 1e-4 | 25 | Ya |
+| Feature Extraction | Hanya "otak" terakhir | 1e-3 | 15 | Tidak |
+| Fine-Tuning Partial | "Otak" + 30 layer terakhir | 5e-4 | 25 | Ya |
+| Fine-Tuning Full | Seluruh model | 1e-4 | 25 | Ya |
+
+> 💡 **Augmentasi** adalah teknik memperbanyak variasi gambar dengan cara memutar, membalik, atau memperbesar gambar asli. Gunanya agar model tidak "hafal mati" pada gambar training.
+
+---
 
 ## 📈 Hasil Eksperimen
 
@@ -49,37 +70,45 @@ Transfer Learning ResNet-50 dengan 3 mode eksperimen: Feature Extraction, Fine-T
 | Fine-Tuning Full | 1.000000 | 0.560713 | 1.000000 | 0.549323 |
 
 ### Grafik Perbandingan Model
+
 ![Grafik Akurasi](https://github.com/yasmi0/Computer-Vision-and-Deep-Learning/blob/main/grafik_akurasi.png)
 
-### 🏆 Model Terbaik
+---
+
+## 🏆 Model Terbaik
 
 Dipilih berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**:
 
 - **Mode**: Fine-Tuning Partial
 - **Val Accuracy**: 1.000000
-- **Val Loss**: 0.025070 *(paling rendah dari ketiga mode)*
+- **Val Loss**: **0.025070** *(paling rendah dari ketiga mode)*
 - **Test Accuracy**: 1.000000
-- **Test Loss**: 0.027675 *(paling rendah dari ketiga mode)*
+- **Test Loss**: **0.027675** *(paling rendah dari ketiga mode)*
 - **Latensi**: **19.58 ms/gambar (± 2.31 ms)**
 
-**Alasan pemilihan**: Meskipun ketiga mode memiliki akurasi yang sama (1.0), Fine-Tuning Partial memiliki **loss paling rendah**, yang berarti model Fine-Tuning Partial ini paling **yakin** dengan prediksinya.
+> 💡 **Kenapa Loss lebih penting dari Akurasi?**
+> Ketiga model semuanya memiliki akurasi 100%, sehingga dibutuhkan cara lain untuk membedakan mana yang terbaik. Loss mengukur seberapa **yakin** model — makin kecil loss, makin yakin model. Fine-Tuning Partial memiliki loss paling rendah, yang berarti model ini paling **yakin** dengan prediksinya.
 
-## 🔬 Analisis
+---
+
+## 🔬 Analisis Hasil
 
 ### 1. Ketiga Mode Berhasil Mencapai Akurasi Sempurna (1.0)
 
-Setelah perbaikan hyperparameter, ketiga mode mencapai **Val Acc = 1.0** dan **Test Acc = 1.0**. Hal ini menunjukkan bahwa ResNet-50 pre-trained ImageNet mampu mengekstraksi fitur yang relevan untuk membedakan kelas `landing_pad` dan `not_landing_pad`, bahkan pada dataset kecil (100 gambar).
+Setelah beberapa kali perbaikan, ketiga cara akhirnya berhasil mencapai akurasi sempurna (100%). Artinya, ResNet-50 mampu membedakan `landing_pad` dan `not_landing_pad` meskipun hanya dilatih dengan 70 gambar.
 
-**Perbaikan kunci yang membuat Mode 2 & 3 berhasil:**
-- Learning rate dinaikkan dari `1e-5` → `5e-4` (Mode 2) dan `1e-4` (Mode 3).
-- Epoch dinaikkan dari 10 → 25.
-- Augmentasi data (flip, rotation, zoom) ditambahkan.
-- `ReduceLROnPlateau` membantu konvergensi halus.
-- `EarlyStopping` patience dinaikkan dari 3 → 5.
+**Perbaikan yang membuat Mode 2 & 3 berhasil:**
+
+| Sebelum | Sesudah | Efeknya |
+|---|---|---|
+| Learning Rate 1e-5 (terlalu kecil) | 5e-4 dan 1e-4 | Model jadi benar-benar belajar |
+| Epoch 10 (terlalu sedikit) | 25 | Model punya cukup waktu belajar |
+| Tidak ada augmentasi | Ada (flip, rotasi, zoom) | Model tidak mudah hafal |
+| EarlyStopping patience 3 | 5 | Training tidak berhenti terlalu cepat |
 
 ### 2. Fine-Tuning Partial adalah Model Terbaik Secara Kualitas
 
-Meskipun **ketiga mode punya akurasi yang sama (1.0)**, **Fine-Tuning Partial unggul secara kualitas prediksi**:
+Meskipun **ketiga mode punya akurasi yang sama (1.0)**, **Fine-Tuning Partial unggul secara kualitas prediksi:**
 
 | Mode | Val Loss | Test Loss | Interpretasi |
 |---|---|---|---|
@@ -87,46 +116,56 @@ Meskipun **ketiga mode punya akurasi yang sama (1.0)**, **Fine-Tuning Partial un
 | **Fine-Tuning Partial** | **0.025070** | **0.027675** | **Sangat yakin** |
 | Fine-Tuning Full | 0.560713 | 0.549323 | Kurang yakin |
 
-**Loss yang rendah** berarti model tidak hanya benar dalam klasifikasi, tapi juga **yakin** dengan prediksinya (probabilitas output mendekati 1.0 untuk kelas yang benar).
-
-**Fine-Tuning Partial lebih baik dari Fine-Tuning Full Karena:**
+**Fine-Tuning Partial lebih baik dari Fine-Tuning Full karena:**
 - Fine-Tuning Partial membuka hanya 30 layer terakhir (blok conv5) — cukup untuk menyesuaikan fitur tingkat tinggi tanpa overfitting.
 - Fine-Tuning Full membuka **seluruh layer backbone** (termasuk BatchNorm dan Activation, sekitar 175 layer operasi) — terlalu banyak parameter untuk dataset 70 gambar, sehingga model **overfitting** (Val Loss = 0.56 meskipun akurasi 1.0).
 
-Hal ini sesuai dengan teori transfer learning: **semakin kecil dataset, semakin sedikit layer yang boleh di-unfreeze**.
+> 📌 **Semakin kecil dataset, semakin sedikit bagian model yang boleh diubah.**
 
 ### 3. Anomali: Train Acc (0.69) < Val Acc (1.0)
 
 Hal ini terjadi di ketiga mode dan **bukan tanda model jelek**. Penyebabnya:
 
-- **Dropout 0.5** aktif saat training (mempersulit prediksi), nonaktif saat validasi.
-- **Augmentasi data** aktif saat training (menambah variasi), nonaktif saat validasi.
-- **Val set hanya 20 gambar** — val set yang kecil ini kebetulan mudah diklasifikasi oleh model.
+1. **Dropout 0.5** — saat training, sebagian neuron sengaja dimatikan agar model tidak hafal. Hal ini membuat training lebih susah. Saat validasi, semua neuron aktif lagi, sehingga lebih mudah.
+2. **Augmentasi** — saat training, gambar-gambar diputar/dibalik sehingga lebih susah dikenali. Saat validasi, tidak ada augmentasi, sehingga lebih mudah.
+3. **Val set hanya 20 gambar** — val set yang kecil ini kebetulan mudah diklasifikasi oleh model.
 
-Artinya: model sebenarnya **belajar dengan baik**, hanya saja evaluasi training dilakukan dalam kondisi yang lebih sulit. Ini adalah **perilaku normal** ketika dropout + augmentasi digunakan.
+**Kesimpulan**: Model sebenarnya **belajar dengan baik**, hanya saja evaluasi training dilakukan dalam kondisi yang lebih sulit. Ini adalah **perilaku normal** ketika dropout + augmentasi digunakan.
 
-### 4. Best Epoch = 1 untuk Mode 2 & 3
+### 4. Best Epoch = 1 untuk Mode 2 dan 3
 
-Mode 2 dan 3 mencapai akurasi terbaik di **epoch pertama**. Ini menandakan:
+Mode 2 dan 3 mendapatkan akurasi terbaik di **epoch pertama**. Hal ini menunjukkan bahwa:
 
-- Model dengan cepat menemukan solusi yang "cukup baik".
-- Dataset kecil membuat model konvergen sangat cepat.
-- Dengan dataset lebih besar, biasanya best epoch akan lebih tinggi (5-15).
+- Model dengan cepat menemukan solusi yang "cukup baik"
+- Dataset kecil membuat proses belajar sangat cepat
+- Dengan dataset lebih besar, best epoch akan lebih tinggi (5-15)
 
 ### 5. Keterbatasan Evaluasi pada Dataset Kecil
 
-Meskipun hasil terlihat sempurna (akurasi 1.0), ada beberapa hal yang perlu diperhatikan:
+Meskipun hasilnya terlihat sempurna (akurasi 100%), ada beberapa hal yang perlu diperhatikan:
 
-- **Test set hanya 10 gambar**. Akurasi 1.0 dengan 10 gambar memiliki **confidence interval lebar** (untuk n=10, akurasi 1.0 memiliki 95% CI sekitar ±0.30).
-- **Satu gambar salah** akan menurunkan akurasi menjadi 0.9.
-- Hasil **tidak dapat digeneralisasi secara langsung** ke populasi yang lebih luas tanpa validasi tambahan.
+- **Test set cuma 10 gambar**. Kalau 1 gambar salah saja, akurasi langsung turun ke 90%. Jadi angka 100% ini **belum tentu akurat** untuk data lain.
+- **Confidence interval lebar** — untuk 10 gambar, akurasi 100% itu rentangnya bisa ±30%. Artinya bisa jadi akurasi sebenarnya antara 70%-100%.
+- **Belum diuji dengan gambar baru** di luar dataset — jadi belum tentu bekerja baik di dunia nyata.
+
+### 6. Kesimpulan
+
+| Masalah | Kesimpulan |
+|---|---|
+| Learning Rate 1e-5 terlalu kecil | Naikkan LR kalau model tidak belajar |
+| Augmentasi penting untuk dataset kecil | Aktifkan saat fine-tuning |
+| Fine-Tuning Partial lebih baik dari Full | Jangan unfreeze semua layer |
+| Akurasi 100% bukan jaminan model bagus | Cek juga nilai Loss |
+| Dataset kecil bikin hasil tidak stabil | Perbesar dataset atau pakai cross-validation |
+
+---
 
 ## 📦 Dataset & Model
 
-- **Dataset** (`dataset_raw/`): Tersedia di repositori ini (3 MB)
-- **Model terbaik (Fine-Tuning Partial)**: [Google Drive Link](https://drive.google.com/file/d/1E5Or7mtRVsWhAAyKgsan3hd7znc2ZLDd/view?usp=sharing)
-- **Model Fine-Tuning Full**: [Google Drive Link](https://drive.google.com/file/d/1RN3L705o7q83BY9HUhIkZFIcSy2XBK-3/view?usp=sharing)
-- **Model Feature Extraction**: [Google Drive Link](https://drive.google.com/file/d/1GLaqgHof9kSpgHkNzBnEPgV7YJpQEeD7/view?usp=sharing)
-- **Semua model (3 mode)**: [Google Drive Link](https://drive.google.com/file/d/1d5V2RjagQUioZL0Y6ivFEDBwE_Tjipb8/view?usp=sharing)
+- **Dataset** (`dataset_raw/`): Ada di repo ini (3 MB)
+- **Model terbaik (Fine-Tuning Partial)**: [Google Drive](https://drive.google.com/file/d/1E5Or7mtRVsWhAAyKgsan3hd7znc2ZLDd/view?usp=sharing)
+- **Model Fine-Tuning Full**: [Google Drive](https://drive.google.com/file/d/1RN3L705o7q83BY9HUhIkZFIcSy2XBK-3/view?usp=sharing)
+- **Model Feature Extraction**: [Google Drive](https://drive.google.com/file/d/1GLaqgHof9kSpgHkNzBnEPgV7YJpQEeD7/view?usp=sharing)
+- **Semua model (3 mode)**: [Google Drive](https://drive.google.com/file/d/1d5V2RjagQUioZL0Y6ivFEDBwE_Tjipb8/view?usp=sharing)
 
-> ⚠️ File model (`.keras`) tidak disertakan dalam repositori karena melebihi batas ukuran GitHub (100 MB per file). Model tersedia melalui Google Drive.
+> ⚠️ File model (`.keras`) **tidak di-upload ke GitHub** karena ukurannya lebih dari 100 MB per file. Silakan download dari Google Drive.
