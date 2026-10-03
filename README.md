@@ -10,7 +10,7 @@ Transfer Learning ResNet-50 dengan 3 mode eksperimen: Feature Extraction, Fine-T
 - **Stratified split**: Ya (proporsi kelas seimbang di setiap split)
 - **Random seed**: 42
 
-> ⚠️ **Catatan**: Dataset berukuran kecil (100 gambar). Akurasi 1.0 pada test set (10 gambar) tidak dapat digeneralisasi secara langsung ke populasi yang lebih luas. Hasil perlu divalidasi lebih lanjut pada dataset yang lebih besar.
+> ⚠️ **Catatan**: Dataset berukuran kecil (100 gambar). Akurasi 1.0 pada test set (10 gambar) tidak dapat digeneralisasi secara langsung ke populasi yang lebih luas. Hasil validasi harus diverifikasi lebih lanjut pada kumpulan data yang lebih besar.
 
 > Dataset tersedia di Google Drive: [Link](https://drive.google.com/drive/folders/1Bz9DVRyVrGYNLZfTsYn2sjf2WTBG2dIZ?usp=sharing)
 
@@ -19,8 +19,8 @@ Transfer Learning ResNet-50 dengan 3 mode eksperimen: Feature Extraction, Fine-T
 - **Model dasar**: ResNet-50 pre-trained ImageNet (23 juta parameter)
 - **Input**: 224×224 piksel, kanal RGB
 - **Preprocessing**: Resize 224×224, normalisasi ImageNet (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-- **Model selection**: Berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss** (menghindari data leakage dari test set)
-- **Test set**: Hanya digunakan sekali di akhir untuk evaluasi final
+- **Model selection**: Berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**, untuk menghindari kebocoran data test set
+- **Test set**: Hanya digunakan sekali di akhir untuk evaluasi akhir
 
 ### Detail 3 Mode
 
@@ -62,7 +62,7 @@ Dipilih berdasarkan kombinasi **Validation Accuracy** dan **Validation Loss**:
 - **Test Loss**: 0.027675 *(paling rendah dari ketiga mode)*
 - **Latensi**: **19.58 ms/gambar (± 2.31 ms)**
 
-**Alasan pemilihan**: Meskipun ketiga mode memiliki akurasi yang sama (1.0), Fine-Tuning Partial memiliki **loss paling rendah**, yang berarti model paling **yakin** dengan prediksinya.
+**Alasan pemilihan**: Meskipun ketiga mode memiliki akurasi yang sama (1.0), Fine-Tuning Partial memiliki **loss paling rendah**, yang berarti model Fine-Tuning Partial ini paling **yakin** dengan prediksinya.
 
 ## 🔬 Analisis
 
@@ -89,7 +89,7 @@ Meskipun **ketiga mode punya akurasi yang sama (1.0)**, **Fine-Tuning Partial un
 
 **Loss yang rendah** berarti model tidak hanya benar dalam klasifikasi, tapi juga **yakin** dengan prediksinya (probabilitas output mendekati 1.0 untuk kelas yang benar).
 
-**Mengapa Fine-Tuning Partial lebih baik dari Fine-Tuning Full?**
+**Fine-Tuning Partial lebih baik dari Fine-Tuning Full Karena:**
 - Fine-Tuning Partial membuka hanya 30 layer terakhir (blok conv5) — cukup untuk menyesuaikan fitur tingkat tinggi tanpa overfitting.
 - Fine-Tuning Full membuka **seluruh layer backbone** (termasuk BatchNorm dan Activation, sekitar 175 layer operasi) — terlalu banyak parameter untuk dataset 70 gambar, sehingga model **overfitting** (Val Loss = 0.56 meskipun akurasi 1.0).
 
@@ -97,7 +97,7 @@ Hal ini sesuai dengan teori transfer learning: **semakin kecil dataset, semakin 
 
 ### 3. Anomali: Train Acc (0.69) < Val Acc (1.0)
 
-Fenomena ini muncul di ketiga mode dan **bukan tanda model jelek**. Penyebabnya:
+Hal ini terjadi di ketiga mode dan **bukan tanda model jelek**. Penyebabnya:
 
 - **Dropout 0.5** aktif saat training (mempersulit prediksi), nonaktif saat validasi.
 - **Augmentasi data** aktif saat training (menambah variasi), nonaktif saat validasi.
@@ -115,7 +115,7 @@ Mode 2 dan 3 mencapai akurasi terbaik di **epoch pertama**. Ini menandakan:
 
 ### 5. Keterbatasan Evaluasi pada Dataset Kecil
 
-Meskipun hasil terlihat sempurna (akurasi 1.0), ada keterbatasan yang perlu disadari:
+Meskipun hasil terlihat sempurna (akurasi 1.0), ada beberapa keterbatasan yang perlu diperhatikan:
 
 - **Test set hanya 10 gambar**. Akurasi 1.0 dengan 10 gambar memiliki **confidence interval lebar** (untuk n=10, akurasi 1.0 memiliki 95% CI sekitar ±0.30).
 - **Satu gambar salah** akan menurunkan akurasi menjadi 0.9.
