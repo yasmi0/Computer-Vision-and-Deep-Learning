@@ -158,4 +158,4 @@ Meskipun hasilnya terlihat sempurna (akurasi 100%), ada beberapa hal yang perlu 
 - **Model Feature Extraction**: [Google Drive](https://drive.google.com/file/d/1GLaqgHof9kSpgHkNzBnEPgV7YJpQEeD7/view?usp=sharing)
 - **Semua model (3 mode)**: [Google Drive](https://drive.google.com/file/d/1d5V2RjagQUioZL0Y6ivFEDBwE_Tjipb8/view?usp=sharing)
 
-> ⚠️ File model (`.keras`) **tidak di-upload ke GitHub** karena ukurannya lebih dari 100 MB per file. Silakan download dari Google Drive.
+> ⚠️ File model (`.keras`) **tidak di-upload ke GitHub** karena ukurannya lebih dari 100 MB per file.
